@@ -140,7 +140,7 @@ const GRMDashboard = () => {
         top: 0,
         backgroundColor:'var(--color-background-base-default, #101923)',
         zIndex: 100,
-        paddingBottom: '20px',
+        paddingBottom: '10px',
         borderBottom: '1px solid #ccc'
   }}>
 
@@ -150,7 +150,7 @@ const GRMDashboard = () => {
             status={notification.status}
         />
 
-    <h1>GRM Alert Dashboard</h1>
+    <h3>GRM Alert Dashboard</h3>
     
     {/* Severity Filter */}
     <div 
@@ -158,7 +158,7 @@ const GRMDashboard = () => {
         display: 'flex', 
         alignItems: 'center', 
         justifyContent: 'space-between',
-        marginBottom: '20px'
+        marginBottom: '10px'
       }}
     >
       <RuxSelect
