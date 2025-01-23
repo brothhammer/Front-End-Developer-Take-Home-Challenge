@@ -126,7 +126,14 @@ const GRMDashboard = () => {
   };
   
   return (
-    <div style={{ padding: '20px' }}>
+    <div style={{ 
+        padding: '20px',
+        maxWidth: '1200px',
+        margin: '0 auto',
+        width: '100%',
+        boxSizing: 'border-box',
+        minWidth: '320px'  // Minimum width for mobile
+      }}>
         
     <div style={{ 
         position: 'sticky',
@@ -189,6 +196,7 @@ const GRMDashboard = () => {
             status: 'normal'
           }
         ]}
+        style={{ paddingRight: '10px' }}
         notifications={filteredAlerts.filter(alert => alert.acknowledged).length}
         sublabel={`${filteredAlerts.filter(alert => alert.acknowledged).length} of ${filteredAlerts.length}`}
       />
