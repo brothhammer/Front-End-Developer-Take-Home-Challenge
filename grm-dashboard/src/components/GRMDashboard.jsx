@@ -143,8 +143,11 @@ const GRMDashboard = () => {
                         {/* There is no warning status available in RuxStatus, we can add one, use this workaround, 
                         or have not icon or status symbol for warning errors and rely on the text 
                         TODO: remove/modify comment after decision*/}
-                        <RuxStatus status={alert.errorSeverity} className="status-icon" />
-                        {alert.errorSeverity === "warning" && <RuxIcon icon="warning" size="1rem"></RuxIcon>}
+                       {
+                        alert.errorSeverity !== "warning" 
+                        ? (<RuxStatus status={alert.errorSeverity} className="status-icon" />) 
+                        :(<RuxIcon icon="warning" size="1rem"></RuxIcon>)
+                       }
                         <div className="label" style={{ textAlign: 'center' }}>{alert.errorSeverity}</div>
                     </span>
                     </div>
