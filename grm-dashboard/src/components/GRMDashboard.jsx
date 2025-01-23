@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { RuxButton, RuxDialog, RuxCard, RuxStatus, RuxIcon, RuxSelect, RuxOption } from '@astrouxds/react'
+import { RuxButton, RuxDialog, RuxCard, RuxStatus, RuxIcon, RuxSelect, RuxOption, RuxMonitoringProgressIcon } from '@astrouxds/react'
 
 const GRMDashboard = () => {
   const [contacts, setContacts] = useState([]);
@@ -91,7 +91,14 @@ const GRMDashboard = () => {
       <h1>GRM Alert Dashboard</h1>
       
       {/* Severity Filter */}
-      <div style={{ marginBottom: '20px' }}>
+      <div 
+        style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'space-between',
+            marginBottom: '20px'
+        }}
+      >
       <RuxSelect
         label="Filter by Severity"
         value={selectedSeverityFilter}
@@ -107,6 +114,29 @@ const GRMDashboard = () => {
             <RuxOption value="caution" label="Caution"></RuxOption>
             <RuxOption value="warning" label="Warning"></RuxOption>
         </RuxSelect>
+
+        <RuxMonitoringProgressIcon
+            label="Acknowledged"
+            progress={Math.round((filteredAlerts.filter(alert => alert.acknowledged).length / filteredAlerts.length) * 100) || 0}
+            min={0}
+            max={100}
+            range={[
+            {
+                threshold: 33,
+                status: 'critical'
+            },
+            {
+                threshold: 66,
+                status: 'caution'
+            },
+            {
+                threshold: 100,
+                status: 'normal'
+            }
+            ]}
+            notifications={filteredAlerts.filter(alert => alert.acknowledged).length}
+            sublabel={`${filteredAlerts.filter(alert => alert.acknowledged).length} of ${filteredAlerts.length}`}
+        />
       </div>
 
       {/* Alerts List */}
