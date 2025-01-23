@@ -3,6 +3,7 @@ import {
   RuxOption,
   RuxMonitoringProgressIcon,
 } from "@astrouxds/react";
+import PropTypes from 'prop-types';
 
 const AlertFilters = ({ 
   selectedSeverityFilter, 
@@ -68,5 +69,14 @@ const AlertFilters = ({
     </div>
   );
 };
+
+AlertFilters.propTypes = {
+    selectedSeverityFilter: PropTypes.string.isRequired,
+    setSelectedSeverityFilter: PropTypes.func.isRequired,
+    filteredAlerts: PropTypes.arrayOf(PropTypes.shape({
+      acknowledged: PropTypes.bool,
+    })).isRequired,
+  };
+  
 
 export default AlertFilters;

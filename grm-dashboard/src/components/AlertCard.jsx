@@ -4,10 +4,10 @@ import {
   RuxIcon,
   RuxButton,
 } from "@astrouxds/react";
+import PropTypes from 'prop-types';
 
 const AlertCard = ({ 
   alert, 
-  formatDate, 
   getTimeRange, 
   onShowDetails 
 }) => {
@@ -103,5 +103,21 @@ const AlertCard = ({
     </RuxCard>
   );
 };
+
+AlertCard.propTypes = {
+    alert: PropTypes.shape({
+      errorId: PropTypes.string.isRequired,
+      contactName: PropTypes.string.isRequired,
+      errorSeverity: PropTypes.string.isRequired,
+      errorMessage: PropTypes.string.isRequired,
+      contactBeginTimestamp: PropTypes.number.isRequired,
+      contactEndTimestamp: PropTypes.number.isRequired,
+      acknowledged: PropTypes.bool,
+      longMessage: PropTypes.string,
+    }).isRequired,
+    formatDate: PropTypes.func.isRequired,
+    getTimeRange: PropTypes.func.isRequired,
+    onShowDetails: PropTypes.func.isRequired,
+  };  
 
 export default AlertCard;

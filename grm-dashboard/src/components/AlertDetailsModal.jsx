@@ -1,4 +1,5 @@
 import { RuxDialog } from "@astrouxds/react";
+import PropTypes from 'prop-types';
 
 const AlertDetailsModal = ({ 
   isOpen, 
@@ -48,5 +49,20 @@ const AlertDetailsModal = ({
     </RuxDialog>
   );
 };
+
+AlertDetailsModal.propTypes = {
+    isOpen: PropTypes.bool.isRequired,
+    alert: PropTypes.shape({
+      errorId: PropTypes.string.isRequired,
+      contactSatellite: PropTypes.string,
+      contactDetail: PropTypes.string,
+      errorCategory: PropTypes.string,
+      errorTime: PropTypes.number.isRequired,
+      longMessage: PropTypes.string,
+    }),
+    formatDate: PropTypes.func.isRequired,
+    onClose: PropTypes.func.isRequired,
+    onAcknowledge: PropTypes.func.isRequired,
+  };
 
 export default AlertDetailsModal;
