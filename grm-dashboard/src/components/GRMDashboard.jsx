@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { RuxButton, RuxDialog, RuxCard, RuxStatus, RuxIcon, RuxSelect, RuxOption } from '@astrouxds/react'
 
 const GRMDashboard = () => {
@@ -85,23 +85,7 @@ const GRMDashboard = () => {
   const getTimeRange = (begin, end) => {
     return `${formatDate(begin)} - ${formatDate(end)}`;
   };
-
-  console.log(selectedSeverityFilter)
-
-//   useEffect(() => {
-//     const handleSelectChange = (e) => {
-//       console.log('Selected value:', e.detail);
-//       setSelectedSeverityFilter(e.detail);
-//     };
   
-//     document.addEventListener('ruxselect', handleSelectChange);
-  
-//     return () => {
-//       document.removeEventListener('ruxselect', handleSelectChange);
-//     };
-//   }, []);
-  
-
   return (
     <div style={{ padding: '20px' }}>
       <h1>GRM Alert Dashboard</h1>
@@ -109,13 +93,13 @@ const GRMDashboard = () => {
       {/* Severity Filter */}
       <div style={{ marginBottom: '20px' }}>
       <RuxSelect
-            label="Filter by Severity"
-            value={selectedSeverityFilter}
-            onRuxchange={(e) => setSelectedSeverityFilter(e.target.value)}
-            style={{ 
-              paddingLeft: '10px',
-              width: '200px'
-            }}
+        label="Filter by Severity"
+        value={selectedSeverityFilter}
+        onRuxchange={(e) => setSelectedSeverityFilter(e.target.value)}
+        style={{ 
+            paddingLeft: '10px',
+            width: '200px'
+        }}
       >
             <RuxOption value="all" label="All"></RuxOption>
             <RuxOption value="critical" label="Critical"></RuxOption>
@@ -123,19 +107,6 @@ const GRMDashboard = () => {
             <RuxOption value="caution" label="Caution"></RuxOption>
             <RuxOption value="warning" label="Warning"></RuxOption>
         </RuxSelect>
-
-        {/* {['all', 'critical', 'serious', 'caution', 'warning'].map(severity => (
-          <RuxButton
-            key={severity}
-            onClick={() => setSelectedSeverityFilter(severity)}
-            secondary={selectedSeverityFilter !== severity}
-            style={{ 
-              paddingLeft: '10px',
-            }}
-          >
-            {severity}
-          </RuxButton>
-        ))} */}
       </div>
 
       {/* Alerts List */}
