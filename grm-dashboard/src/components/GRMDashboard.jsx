@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { RuxButton, RuxDialog, RuxCard, RuxStatus, RuxIcon, RuxSelect, RuxOption, RuxMonitoringProgressIcon } from '@astrouxds/react'
+import { RuxButton, RuxDialog, RuxCard, RuxStatus, RuxIcon, RuxSelect, RuxOption, RuxMonitoringProgressIcon, RuxNotification } from '@astrouxds/react'
 
 const GRMDashboard = () => {
   const [contacts, setContacts] = useState([]);
@@ -9,6 +9,11 @@ const GRMDashboard = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [notification, setNotification] = useState({
+    show: false,
+    message: '',
+    status: ''
+  });
 
   // Get all alerts from contacts with contact info attached
   const getAllAlerts = useCallback(() => {
@@ -74,15 +79,42 @@ const GRMDashboard = () => {
     setFilteredAlerts(filtered);
   }, [contacts, selectedSeverityFilter, getAllAlerts]);
 
-  const handleAcknowledge = (alertId) => {
-    setContacts(contacts.map(contact => ({
-      ...contact,
-      alerts: contact.alerts?.map(alert => 
-        alert.errorId === alertId 
-          ? { ...alert, acknowledged: true }
-          : alert
-      ) || []
-    })));
+  const handleAcknowledge = async (alertId) => {
+    try {
+      const response = await fetch(`/api/acknowledge/${alertId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to acknowledge alert');
+      }
+        
+      // Update state after successful acknowledgment
+      setContacts(contacts.map(contact => ({
+        ...contact,
+        alerts: contact.alerts?.map(alert => 
+          alert.errorId === alertId 
+            ? { ...alert, acknowledged: true }
+            : alert
+        ) || []
+      })));
+  
+    } catch (error) {
+      console.error('Error acknowledging alert:', error);
+      setNotification({
+        show: true,
+        message: 'Failed to acknowledge alert',
+        status: 'critical'
+      });
+  
+    // Hide notification after 3 seconds
+    setTimeout(() => {
+        setNotification(prev => ({ ...prev, show: false }));
+      }, 3000);
+    }
   };
 
   const formatDate = (timestamp) => {
@@ -95,6 +127,13 @@ const GRMDashboard = () => {
   
   return (
     <div style={{ padding: '20px' }}>
+
+        <RuxNotification
+            open={notification.show}
+            message={notification.message}
+            status={notification.status}
+        />
+        
       <h1>GRM Alert Dashboard</h1>
       
       {/* Severity Filter */}
