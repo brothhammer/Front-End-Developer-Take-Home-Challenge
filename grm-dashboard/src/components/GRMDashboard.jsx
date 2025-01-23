@@ -1,7 +1,5 @@
-import { useState, useEffect, useCallback } from "react";
-import {
-  RuxNotification,
-} from "@astrouxds/react";
+import { useState, useEffect, useCallback } from 'react';
+import { RuxNotification } from '@astrouxds/react';
 
 import AlertFilters from './AlertFilters';
 import AlertCard from './AlertCard';
@@ -10,15 +8,15 @@ import AlertDetailsModal from './AlertDetailsModal';
 const GRMDashboard = () => {
   const [contacts, setContacts] = useState([]);
   const [filteredAlerts, setFilteredAlerts] = useState([]);
-  const [selectedSeverityFilter, setSelectedSeverityFilter] = useState("all");
+  const [selectedSeverityFilter, setSelectedSeverityFilter] = useState('all');
   const [selectedAlert, setSelectedAlert] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [notification, setNotification] = useState({
     show: false,
-    message: "",
-    status: "",
+    message: '',
+    status: '',
   });
 
   // Get all alerts from contacts with contact info attached
@@ -43,14 +41,14 @@ const GRMDashboard = () => {
       setError(null);
       setIsLoading(true);
       try {
-        const response = await fetch("/data.json");
+        const response = await fetch('/data.json');
         if (!response.ok) {
           throw new Error(`Server error: ${response.status}`);
         }
         const data = await response.json();
         setContacts(data);
       } catch (error) {
-        console.error("Error loading data:", error);
+        console.error('Error loading data:', error);
         setError(error.message);
       } finally {
         setIsLoading(false);
@@ -74,7 +72,7 @@ const GRMDashboard = () => {
           }
           return map;
         }, new Map())
-        .values(),
+        .values()
     );
 
     // Sort and filter
@@ -82,9 +80,9 @@ const GRMDashboard = () => {
       .sort((a, b) => b.errorTime - a.errorTime)
       .filter(
         (alert) =>
-          selectedSeverityFilter === "all" ||
+          selectedSeverityFilter === 'all' ||
           alert.errorSeverity.toLowerCase() ===
-            selectedSeverityFilter.toLowerCase(),
+            selectedSeverityFilter.toLowerCase()
       );
 
     setFilteredAlerts(filtered);
@@ -93,14 +91,14 @@ const GRMDashboard = () => {
   const handleAcknowledge = async (alertId) => {
     try {
       const response = await fetch(`/api/acknowledge/${alertId}`, {
-        method: "PUT",
+        method: 'PUT',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
       });
 
       if (!response.ok) {
-        throw new Error("Failed to acknowledge alert");
+        throw new Error('Failed to acknowledge alert');
       }
 
       // Update state after successful acknowledgment
@@ -111,16 +109,16 @@ const GRMDashboard = () => {
             contact.alerts?.map((alert) =>
               alert.errorId === alertId
                 ? { ...alert, acknowledged: true }
-                : alert,
+                : alert
             ) || [],
-        })),
+        }))
       );
     } catch (error) {
-      console.error("Error acknowledging alert:", error);
+      console.error('Error acknowledging alert:', error);
       setNotification({
         show: true,
-        message: "Failed to acknowledge alert",
-        status: "critical",
+        message: 'Failed to acknowledge alert',
+        status: 'critical',
       });
 
       // Hide notification after 3 seconds
@@ -141,22 +139,22 @@ const GRMDashboard = () => {
   return (
     <div
       style={{
-        padding: "20px",
-        maxWidth: "1200px",
-        margin: "0 auto",
-        width: "100%",
-        boxSizing: "border-box",
-        minWidth: "320px", // Minimum width for mobile
+        padding: '20px',
+        maxWidth: '1200px',
+        margin: '0 auto',
+        width: '100%',
+        boxSizing: 'border-box',
+        minWidth: '320px', // Minimum width for mobile
       }}
     >
       <div
         style={{
-          position: "sticky",
+          position: 'sticky',
           top: 0,
-          backgroundColor: "var(--color-background-base-default, #101923)",
+          backgroundColor: 'var(--color-background-base-default, #101923)',
           zIndex: 100,
-          paddingBottom: "10px",
-          borderBottom: "1px solid #ccc",
+          paddingBottom: '10px',
+          borderBottom: '1px solid #ccc',
         }}
       >
         <RuxNotification
@@ -167,7 +165,7 @@ const GRMDashboard = () => {
 
         <h3>GRM Alert Dashboard</h3>
 
-        <AlertFilters 
+        <AlertFilters
           selectedSeverityFilter={selectedSeverityFilter}
           setSelectedSeverityFilter={setSelectedSeverityFilter}
           filteredAlerts={filteredAlerts}
@@ -176,17 +174,17 @@ const GRMDashboard = () => {
 
       {/* Alerts List */}
       {isLoading ? (
-        <div style={{ textAlign: "center", padding: "2rem" }}>
+        <div style={{ textAlign: 'center', padding: '2rem' }}>
           Loading alerts...
         </div>
       ) : error ? (
-        <div style={{ textAlign: "center", padding: "2rem" }}>
+        <div style={{ textAlign: 'center', padding: '2rem' }}>
           Error: There was a problem loading the alerts.
         </div>
       ) : (
         <div>
           {filteredAlerts.map((alert) => (
-            <AlertCard 
+            <AlertCard
               key={alert.errorId}
               alert={alert}
               formatDate={formatDate}
@@ -201,7 +199,7 @@ const GRMDashboard = () => {
       )}
 
       {/* Modal */}
-      <AlertDetailsModal 
+      <AlertDetailsModal
         isOpen={isModalOpen}
         alert={selectedAlert}
         formatDate={formatDate}

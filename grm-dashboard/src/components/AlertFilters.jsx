@@ -2,21 +2,21 @@ import {
   RuxSelect,
   RuxOption,
   RuxMonitoringProgressIcon,
-} from "@astrouxds/react";
+} from '@astrouxds/react';
 import PropTypes from 'prop-types';
 
-const AlertFilters = ({ 
-  selectedSeverityFilter, 
-  setSelectedSeverityFilter, 
-  filteredAlerts 
+const AlertFilters = ({
+  selectedSeverityFilter,
+  setSelectedSeverityFilter,
+  filteredAlerts,
 }) => {
   return (
     <div
       style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        marginBottom: "10px",
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        marginBottom: '10px',
       }}
     >
       <RuxSelect
@@ -24,8 +24,8 @@ const AlertFilters = ({
         value={selectedSeverityFilter}
         onRuxchange={(e) => setSelectedSeverityFilter(e.target.value)}
         style={{
-          paddingLeft: "10px",
-          width: "200px",
+          paddingLeft: '10px',
+          width: '200px',
         }}
       >
         <RuxOption value="all" label="All"></RuxOption>
@@ -41,7 +41,7 @@ const AlertFilters = ({
           Math.round(
             (filteredAlerts.filter((alert) => alert.acknowledged).length /
               filteredAlerts.length) *
-              100,
+              100
           ) || 0
         }
         min={0}
@@ -49,18 +49,18 @@ const AlertFilters = ({
         range={[
           {
             threshold: 33,
-            status: "critical",
+            status: 'critical',
           },
           {
             threshold: 66,
-            status: "caution",
+            status: 'caution',
           },
           {
             threshold: 100,
-            status: "normal",
+            status: 'normal',
           },
         ]}
-        style={{ paddingRight: "10px" }}
+        style={{ paddingRight: '10px' }}
         notifications={
           filteredAlerts.filter((alert) => alert.acknowledged).length
         }
@@ -71,12 +71,13 @@ const AlertFilters = ({
 };
 
 AlertFilters.propTypes = {
-    selectedSeverityFilter: PropTypes.string.isRequired,
-    setSelectedSeverityFilter: PropTypes.func.isRequired,
-    filteredAlerts: PropTypes.arrayOf(PropTypes.shape({
+  selectedSeverityFilter: PropTypes.string.isRequired,
+  setSelectedSeverityFilter: PropTypes.func.isRequired,
+  filteredAlerts: PropTypes.arrayOf(
+    PropTypes.shape({
       acknowledged: PropTypes.bool,
-    })).isRequired,
-  };
-  
+    })
+  ).isRequired,
+};
 
 export default AlertFilters;
