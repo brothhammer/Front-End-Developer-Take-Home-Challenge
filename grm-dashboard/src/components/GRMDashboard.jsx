@@ -1,15 +1,11 @@
 import { useState, useEffect, useCallback } from "react";
 import {
-  RuxButton,
-  RuxDialog,
-  RuxCard,
-  RuxStatus,
-  RuxIcon,
-  RuxSelect,
-  RuxOption,
-  RuxMonitoringProgressIcon,
   RuxNotification,
 } from "@astrouxds/react";
+
+import AlertFilters from './AlertFilters';
+import AlertCard from './AlertCard';
+import AlertDetailsModal from './AlertDetailsModal';
 
 const GRMDashboard = () => {
   const [contacts, setContacts] = useState([]);
@@ -171,63 +167,11 @@ const GRMDashboard = () => {
 
         <h3>GRM Alert Dashboard</h3>
 
-        {/* Severity Filter */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            marginBottom: "10px",
-          }}
-        >
-          <RuxSelect
-            label="Filter by Severity"
-            value={selectedSeverityFilter}
-            onRuxchange={(e) => setSelectedSeverityFilter(e.target.value)}
-            style={{
-              paddingLeft: "10px",
-              width: "200px",
-            }}
-          >
-            <RuxOption value="all" label="All"></RuxOption>
-            <RuxOption value="critical" label="Critical"></RuxOption>
-            <RuxOption value="serious" label="serious"></RuxOption>
-            <RuxOption value="caution" label="Caution"></RuxOption>
-            <RuxOption value="warning" label="Warning"></RuxOption>
-          </RuxSelect>
-
-          <RuxMonitoringProgressIcon
-            label="Acknowledged"
-            progress={
-              Math.round(
-                (filteredAlerts.filter((alert) => alert.acknowledged).length /
-                  filteredAlerts.length) *
-                  100,
-              ) || 0
-            }
-            min={0}
-            max={100}
-            range={[
-              {
-                threshold: 33,
-                status: "critical",
-              },
-              {
-                threshold: 66,
-                status: "caution",
-              },
-              {
-                threshold: 100,
-                status: "normal",
-              },
-            ]}
-            style={{ paddingRight: "10px" }}
-            notifications={
-              filteredAlerts.filter((alert) => alert.acknowledged).length
-            }
-            sublabel={`${filteredAlerts.filter((alert) => alert.acknowledged).length} of ${filteredAlerts.length}`}
-          />
-        </div>
+        <AlertFilters 
+          selectedSeverityFilter={selectedSeverityFilter}
+          setSelectedSeverityFilter={setSelectedSeverityFilter}
+          filteredAlerts={filteredAlerts}
+        />
       </div>
 
       {/* Alerts List */}
@@ -242,144 +186,28 @@ const GRMDashboard = () => {
       ) : (
         <div>
           {filteredAlerts.map((alert) => (
-            <RuxCard
+            <AlertCard 
               key={alert.errorId}
-              className="alert-card"
-              style={{
-                margin: "10px",
-                opacity: alert.acknowledged ? 0.6 : 1,
+              alert={alert}
+              formatDate={formatDate}
+              getTimeRange={getTimeRange}
+              onShowDetails={(selectedAlert) => {
+                setSelectedAlert(selectedAlert);
+                setIsModalOpen(true);
               }}
-            >
-              <div slot="header">
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <span style={{ fontWeight: "bold" }}>
-                    Contact Name: {alert.contactName}
-                  </span>
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "10px",
-                    }}
-                  >
-                    <span
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        gap: "5px",
-                      }}
-                    >
-                      {/* There is no warning status available in RuxStatus, we can add one, use this workaround, 
-                        or have not icon or status symbol for warning errors and rely on the text 
-                        TODO: remove/modify comment after decision*/}
-                      {alert.errorSeverity !== "warning" ? (
-                        <RuxStatus
-                          status={alert.errorSeverity}
-                          className="status-icon"
-                        />
-                      ) : (
-                        <RuxIcon icon="warning" size="1rem"></RuxIcon>
-                      )}
-                      <div className="label" style={{ textAlign: "center" }}>
-                        {alert.errorSeverity}
-                      </div>
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <div style={{ margin: "10px 0" }}>
-                  <strong>Alert Message: </strong>
-                  {alert.errorMessage}
-                </div>
-
-                <div style={{ margin: "10px 0" }}>
-                  <strong>Contact Time: </strong>
-                  {getTimeRange(
-                    alert.contactBeginTimestamp,
-                    alert.contactEndTimestamp,
-                  )}
-                </div>
-
-                {alert.longMessage && (
-                  <div style={{ margin: "10px 0", color: "#666" }}>
-                    <strong>Long Message: </strong>
-                    {alert.longMessage}
-                  </div>
-                )}
-              </div>
-
-              <div slot="footer">
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <RuxButton
-                    onClick={() => {
-                      setSelectedAlert(alert);
-                      setIsModalOpen(true);
-                    }}
-                  >
-                    Show Details
-                  </RuxButton>
-                  {alert.acknowledged && <span>✓ Acknowledged</span>}
-                </div>
-              </div>
-            </RuxCard>
+            />
           ))}
         </div>
       )}
 
       {/* Modal */}
-      {isModalOpen && selectedAlert && (
-        <RuxDialog
-          open={isModalOpen}
-          onRuxdialogclosed={(e) => {
-            if (e.detail === true) {
-              // Confirm was clicked
-              handleAcknowledge(selectedAlert.errorId);
-            }
-            // Close the modal in either case
-            setIsModalOpen(false);
-          }}
-          confirmText="Acknowledge"
-          denyText="Close"
-          title="Alert Details"
-          style={{ width: "500px" }}
-        >
-          <div style={{ marginBottom: "10px" }}>
-            <strong>Satellite: </strong>
-            {selectedAlert.contactSatellite}
-          </div>
-          <div style={{ marginBottom: "10px" }}>
-            <strong>Contact Details: </strong>
-            {selectedAlert.contactDetail}
-          </div>
-          <div style={{ marginBottom: "10px" }}>
-            <strong>Category: </strong>
-            {selectedAlert.errorCategory}
-          </div>
-          <div style={{ marginBottom: "10px" }}>
-            <strong>Time: </strong>
-            {formatDate(selectedAlert.errorTime / 1000)}
-          </div>
-          <div style={{ marginBottom: "20px" }}>
-            <strong>Full Message: </strong>
-            {selectedAlert.longMessage}
-          </div>
-        </RuxDialog>
-      )}
+      <AlertDetailsModal 
+        isOpen={isModalOpen}
+        alert={selectedAlert}
+        formatDate={formatDate}
+        onClose={() => setIsModalOpen(false)}
+        onAcknowledge={handleAcknowledge}
+      />
     </div>
   );
 };
