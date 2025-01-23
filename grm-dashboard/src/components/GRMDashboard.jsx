@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { RuxButton, RuxDialog, RuxCard, RuxStatus, RuxIcon } from '@astrouxds/react'
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { RuxButton, RuxDialog, RuxCard, RuxStatus, RuxIcon, RuxSelect, RuxOption } from '@astrouxds/react'
 
 const GRMDashboard = () => {
   const [contacts, setContacts] = useState([]);
@@ -65,7 +65,7 @@ const GRMDashboard = () => {
       );
 
     setFilteredAlerts(filtered);
-  }, [contacts, selectedSeverityFilter, setSelectedSeverityFilter, getAllAlerts]);
+  }, [contacts, selectedSeverityFilter, getAllAlerts]);
 
   const handleAcknowledge = (alertId) => {
     setContacts(contacts.map(contact => ({
@@ -86,13 +86,45 @@ const GRMDashboard = () => {
     return `${formatDate(begin)} - ${formatDate(end)}`;
   };
 
+  console.log(selectedSeverityFilter)
+
+//   useEffect(() => {
+//     const handleSelectChange = (e) => {
+//       console.log('Selected value:', e.detail);
+//       setSelectedSeverityFilter(e.detail);
+//     };
+  
+//     document.addEventListener('ruxselect', handleSelectChange);
+  
+//     return () => {
+//       document.removeEventListener('ruxselect', handleSelectChange);
+//     };
+//   }, []);
+  
+
   return (
     <div style={{ padding: '20px' }}>
       <h1>GRM Alert Dashboard</h1>
       
       {/* Severity Filter */}
       <div style={{ marginBottom: '20px' }}>
-        {['all', 'critical', 'serious', 'caution', 'warning'].map(severity => (
+      <RuxSelect
+            label="Filter by Severity"
+            value={selectedSeverityFilter}
+            onRuxchange={(e) => setSelectedSeverityFilter(e.target.value)}
+            style={{ 
+              paddingLeft: '10px',
+              width: '200px'
+            }}
+      >
+            <RuxOption value="all" label="All"></RuxOption>
+            <RuxOption value="critical" label="Critical"></RuxOption>
+            <RuxOption value="serious" label="serious"></RuxOption>
+            <RuxOption value="caution" label="Caution"></RuxOption>
+            <RuxOption value="warning" label="Warning"></RuxOption>
+        </RuxSelect>
+
+        {/* {['all', 'critical', 'serious', 'caution', 'warning'].map(severity => (
           <RuxButton
             key={severity}
             onClick={() => setSelectedSeverityFilter(severity)}
@@ -103,7 +135,7 @@ const GRMDashboard = () => {
           >
             {severity}
           </RuxButton>
-        ))}
+        ))} */}
       </div>
 
       {/* Alerts List */}
