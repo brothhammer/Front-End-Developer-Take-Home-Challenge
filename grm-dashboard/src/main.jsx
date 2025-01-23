@@ -4,9 +4,21 @@ import App from './App'
 import './index.css'
 
 async function prepare() {
-  if (import.meta.env.DEV) {  // Vite's way of checking development mode
+  if (import.meta.env.DEV) {
     const { worker } = await import('./mocks/browser')
-    return worker.start()
+    return worker.start({
+      onUnhandledRequest: (request, print) => {
+        if (
+          request.url.includes('/node_modules/') ||
+          request.url.includes('/@vite/') ||
+          request.url.includes('.entry-') ||
+          request.url.includes('fonts.gstatic.com')
+        ) {
+          return
+        }
+        print.warning()
+      }
+    })
   }
   return Promise.resolve()
 }
