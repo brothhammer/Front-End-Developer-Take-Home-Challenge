@@ -127,63 +127,73 @@ const GRMDashboard = () => {
   
   return (
     <div style={{ padding: '20px' }}>
+        
+    <div style={{ 
+        position: 'sticky',
+        top: 0,
+        backgroundColor:'var(--color-background-base-default, #101923)',
+        zIndex: 100,
+        paddingBottom: '20px',
+        borderBottom: '1px solid #ccc'
+  }}>
 
         <RuxNotification
             open={notification.show}
             message={notification.message}
             status={notification.status}
         />
-        
-      <h1>GRM Alert Dashboard</h1>
-      
-      {/* Severity Filter */}
-      <div 
-        style={{ 
-            display: 'flex', 
-            alignItems: 'center', 
-            justifyContent: 'space-between',
-            marginBottom: '20px'
-        }}
-      >
+
+    <h1>GRM Alert Dashboard</h1>
+    
+    {/* Severity Filter */}
+    <div 
+      style={{ 
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'space-between',
+        marginBottom: '20px'
+      }}
+    >
       <RuxSelect
         label="Filter by Severity"
         value={selectedSeverityFilter}
         onRuxchange={(e) => setSelectedSeverityFilter(e.target.value)}
         style={{ 
-            paddingLeft: '10px',
-            width: '200px'
+          paddingLeft: '10px',
+          width: '200px'
         }}
       >
-            <RuxOption value="all" label="All"></RuxOption>
-            <RuxOption value="critical" label="Critical"></RuxOption>
-            <RuxOption value="serious" label="serious"></RuxOption>
-            <RuxOption value="caution" label="Caution"></RuxOption>
-            <RuxOption value="warning" label="Warning"></RuxOption>
-        </RuxSelect>
+        <RuxOption value="all" label="All"></RuxOption>
+        <RuxOption value="critical" label="Critical"></RuxOption>
+        <RuxOption value="serious" label="serious"></RuxOption>
+        <RuxOption value="caution" label="Caution"></RuxOption>
+        <RuxOption value="warning" label="Warning"></RuxOption>
+      </RuxSelect>
 
-        <RuxMonitoringProgressIcon
-            label="Acknowledged"
-            progress={Math.round((filteredAlerts.filter(alert => alert.acknowledged).length / filteredAlerts.length) * 100) || 0}
-            min={0}
-            max={100}
-            range={[
-            {
-                threshold: 33,
-                status: 'critical'
-            },
-            {
-                threshold: 66,
-                status: 'caution'
-            },
-            {
-                threshold: 100,
-                status: 'normal'
-            }
-            ]}
-            notifications={filteredAlerts.filter(alert => alert.acknowledged).length}
-            sublabel={`${filteredAlerts.filter(alert => alert.acknowledged).length} of ${filteredAlerts.length}`}
-        />
-      </div>
+      <RuxMonitoringProgressIcon
+        label="Acknowledged"
+        progress={Math.round((filteredAlerts.filter(alert => alert.acknowledged).length / filteredAlerts.length) * 100) || 0}
+        min={0}
+        max={100}
+        range={[
+          {
+            threshold: 33,
+            status: 'critical'
+          },
+          {
+            threshold: 66,
+            status: 'caution'
+          },
+          {
+            threshold: 100,
+            status: 'normal'
+          }
+        ]}
+        notifications={filteredAlerts.filter(alert => alert.acknowledged).length}
+        sublabel={`${filteredAlerts.filter(alert => alert.acknowledged).length} of ${filteredAlerts.length}`}
+      />
+    </div>
+  </div>
 
       {/* Alerts List */}
       {isLoading ? (
