@@ -7,6 +7,8 @@ const GRMDashboard = () => {
   const [selectedSeverityFilter, setSelectedSeverityFilter] = useState('all');
   const [selectedAlert, setSelectedAlert] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   // Get all alerts from contacts with contact info attached
   const getAllAlerts = useCallback(() => {
@@ -26,18 +28,23 @@ const GRMDashboard = () => {
   // Load initial data
   useEffect(() => {
     const fetchData = async () => {
+      setError(null);
+      setIsLoading(true);
       try {
         const response = await fetch('/data.json');
         if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+          throw new Error(`Server error: ${response.status}`);
         }
         const data = await response.json();
         setContacts(data);
       } catch (error) {
         console.error('Error loading data:', error);
+        setError(error.message);
+      } finally {
+        setIsLoading(false);
       }
     };
-
+  
     fetchData();
   }, []);
 
@@ -140,6 +147,15 @@ const GRMDashboard = () => {
       </div>
 
       {/* Alerts List */}
+      {isLoading ? (
+      <div style={{ textAlign: 'center', padding: '2rem' }}>
+        Loading alerts...
+      </div>
+    ) : error ? (
+      <div style={{ textAlign: 'center', padding: '2rem' }}>
+        Error: There was a problem loading the alerts.
+      </div>
+    ) : (
       <div>
         {filteredAlerts.map(alert => (
           <RuxCard
@@ -223,6 +239,7 @@ const GRMDashboard = () => {
           </RuxCard>
         ))}
       </div>
+    )}
 
       {/* Modal */}
       {isModalOpen && selectedAlert && (
