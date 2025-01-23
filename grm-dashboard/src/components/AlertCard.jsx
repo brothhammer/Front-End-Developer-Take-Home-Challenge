@@ -107,7 +107,7 @@ const AlertCard = ({
 AlertCard.propTypes = {
     alert: PropTypes.shape({
       errorId: PropTypes.string.isRequired,
-      contactName: PropTypes.string.isRequired,
+      contactName: PropTypes.number.isRequired,
       errorSeverity: PropTypes.string.isRequired,
       errorMessage: PropTypes.string.isRequired,
       contactBeginTimestamp: PropTypes.number.isRequired,
