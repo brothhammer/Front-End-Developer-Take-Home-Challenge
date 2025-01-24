@@ -144,7 +144,8 @@ const GRMDashboard = () => {
         margin: '0 auto',
         width: '100%',
         boxSizing: 'border-box',
-        minWidth: '320px', // Minimum width for mobile
+        minWidth: '320px', // Minimum width for mobile,
+        minHeight: '600px',
       }}
     >
       <div
@@ -153,7 +154,7 @@ const GRMDashboard = () => {
           top: 0,
           backgroundColor: 'var(--color-background-base-default, #101923)',
           zIndex: 100,
-          paddingBottom: '10px',
+          padding: '10px 0',
           borderBottom: '1px solid #ccc',
         }}
       >
@@ -163,7 +164,7 @@ const GRMDashboard = () => {
           status={notification.status}
         />
 
-        <h3>GRM Alert Dashboard</h3>
+        <h3 style={{paddingLeft: '10px'}}>GRM Alert Dashboard</h3>
 
         <AlertFilters
           selectedSeverityFilter={selectedSeverityFilter}
