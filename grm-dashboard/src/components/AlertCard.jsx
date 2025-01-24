@@ -1,7 +1,9 @@
-import { RuxCard, RuxStatus, RuxIcon, RuxButton } from '@astrouxds/react';
+import { RuxCard, RuxStatus, RuxIcon, RuxButton, RuxIndeterminateProgress } from '@astrouxds/react';
 import PropTypes from 'prop-types';
 
-const AlertCard = ({ alert, getTimeRange, onShowDetails }) => {
+const AlertCard = ({ alert, getTimeRange, onShowDetails, acknowledgingAlertId }) => {
+  const isAcknowledging = acknowledgingAlertId === alert.errorId;
+
   return (
     <RuxCard
       key={alert.errorId}
@@ -84,6 +86,7 @@ const AlertCard = ({ alert, getTimeRange, onShowDetails }) => {
             Show Details
           </RuxButton>
           {alert.acknowledged && <span>✓ Acknowledged</span>}
+          {isAcknowledging && ( <RuxIndeterminateProgress style={{'--size': '35px'}}/> )}
         </div>
       </div>
     </RuxCard>
@@ -104,6 +107,7 @@ AlertCard.propTypes = {
   formatDate: PropTypes.func.isRequired,
   getTimeRange: PropTypes.func.isRequired,
   onShowDetails: PropTypes.func.isRequired,
+  acknowledgingAlertId: PropTypes.string,
 };
 
 export default AlertCard;

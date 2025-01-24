@@ -18,6 +18,7 @@ const GRMDashboard = () => {
     message: '',
     status: '',
   });
+  const [acknowledgingAlertId, setAcknowledgingAlertId] = useState(null);
 
   // Get all alerts from contacts with contact info attached
   const getAllAlerts = useCallback(() => {
@@ -89,6 +90,7 @@ const GRMDashboard = () => {
   }, [contacts, selectedSeverityFilter, getAllAlerts]);
 
   const handleAcknowledge = async (alertId) => {
+    setAcknowledgingAlertId(alertId);
     try {
       const response = await fetch(`/api/acknowledge/${alertId}`, {
         method: 'PUT',
@@ -125,6 +127,8 @@ const GRMDashboard = () => {
       setTimeout(() => {
         setNotification((prev) => ({ ...prev, show: false }));
       }, 3000);
+    } finally {
+      setAcknowledgingAlertId(null);
     }
   };
 
@@ -194,6 +198,7 @@ const GRMDashboard = () => {
                 setSelectedAlert(selectedAlert);
                 setIsModalOpen(true);
               }}
+              acknowledgingAlertId={acknowledgingAlertId}
             />
           ))}
         </div>
