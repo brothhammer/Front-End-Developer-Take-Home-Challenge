@@ -6,6 +6,7 @@ export const handlers = [
     await delay(2000);
 
     // Randomly fail 25% of the time
+
     // if (Math.random() > 0.75) {
     //   return new HttpResponse(null, {
     //     status: 500,
@@ -21,20 +22,21 @@ export const handlers = [
     const { id } = params;
 
     // Randomly fail 25% acknowledgments
-    // if (Math.random() > 0.75) {
-    //   return new HttpResponse(
-    //     JSON.stringify({
-    //       error: 'Failed to acknowledge alert',
-    //       message: 'Server error occurred',
-    //     }),
-    //     {
-    //       status: 500,
-    //       headers: {
-    //         'Content-Type': 'application/json',
-    //       },
-    //     }
-    //   );
-    // }
+
+    if (Math.random() > 0.75) {
+      return new HttpResponse(
+        JSON.stringify({
+          error: 'Failed to acknowledge alert',
+          message: 'Server error occurred',
+        }),
+        {
+          status: 500,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+    }
 
     return HttpResponse.json({
       success: true,
