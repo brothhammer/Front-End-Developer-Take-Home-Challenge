@@ -60,7 +60,7 @@ const AlertFilters = ({
             status: 'normal',
           },
         ]}
-        style={{ paddingRight: '10px' }}
+        style={{ paddingRight: '10px',  paddingLeft: '10px' }}
         notifications={
           filteredAlerts.filter((alert) => alert.acknowledged).length
         }
